@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<widget xmlns:tizen="http://tizen.org/ns/widgets" xmlns="http://www.w3.org/ns/widgets"
+    id="http://yourdomain/whizTv" version="1.0.0" viewmodes="maximized">
+    <tizen:application id="dOKJh1C7uZ.whizTv" package="dOKJh1C7uZ" required_version="2.3" />
+    <author href="https://whizti.com" email="ashok@whizti.com">Ashok</author>
+    <content src="index.html" />
+    <feature name="http://tizen.org/feature/screen.size.normal.1080.1920" />
+    <icon src="icon.png" />
+    <name>whizTv</name>
+    <access origin="*" subdomains="true" />
+    <tizen:privilege name="http://developer.samsung.com/privilege/network.public" />
+    <tizen:profile name="tv-samsung" />
+    <tizen:privilege name="http://tizen.org/privilege/internet" />
+    <tizen:privilege name='http://tizen.org/privilege/tv.inputdevice' />
+    <tizen:setting pointing-device-support='enable' />
+
+
+    <tizen:setting screen-orientation="landscape" context-menu="enable" background-support="disable"
+        encryption="disable" install-location="auto" hwkey-event="enable" />
+</widget>
