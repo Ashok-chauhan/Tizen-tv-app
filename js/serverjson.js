@@ -26,6 +26,11 @@ function registerKeyHandler() {
             leftKey.children[i].classList.remove("focused");
             lcounter--;
             leftKey.children[lcounter].classList.add("focused");
+
+            ////////////////////////////////////////////////////////////////
+
+            leftKey.children[lcounter].scrollIntoView(true);
+            ////////////////////////////////////////////////////////////////
             break;
           }
         }
@@ -54,17 +59,20 @@ function registerKeyHandler() {
           keys.key = keys.key.previousElementSibling;
         }
         console.log("key >>-Up " + JSON.stringify(keys));
+        keys.key.scrollIntoView(true);
         keys.focus();
         break;
 
       case 39: //RIGHT arrow
         console.log("#### >> RIGHT Arrow");
+
         keys.blur();
 
         let arrowkeyName = keys.key.id;
         console.log(">>>>" + arrowkeyName);
         catid = arrowkeyName;
         let arrowKey = document.getElementById(arrowkeyName);
+
         let count = arrowKey.children;
         let counter = 0;
         for (let i = 0; i < count.length; i++) {
@@ -78,6 +86,10 @@ function registerKeyHandler() {
             arrowKey.children[i].classList.remove("focused");
             counter++;
             arrowKey.children[counter].classList.add("focused");
+            ////////////////////////////////////////////////////////////////
+            //let el = document.querySelector(".item focused");
+            arrowKey.children[counter].scrollIntoView(true);
+            ////////////////////////////////////////////////////////////////
             break;
           }
         }
@@ -106,6 +118,7 @@ function registerKeyHandler() {
         } else {
           keys.key = keys.key.nextElementSibling;
         }
+        keys.key.scrollIntoView(true);
         console.log("key >>: " + JSON.stringify(keys));
         keys.focus();
         break;
@@ -258,6 +271,9 @@ window.onload = (event) => {
     categoryid.forEach((cid) => {
       if (cid.id !== undefined) {
         // fdiv.className = "flex_container";
+        let catName = document.createElement("div");
+        catName.className = "h2";
+        catName.innerHTML = ` ${cid.name} `;
         let div = document.createElement("div");
         div.className = "flex_container";
         div.setAttribute("id", cid.id);
@@ -271,10 +287,13 @@ window.onload = (event) => {
                 <a href="video.html?videoUrl=${data.response.content[i].uri}">
                 
                   <img src="${data.response.content[i].icon_uri}" width="500" height="200" />
-                  <span class="title"> ${data.response.content[i].title}</span>
+                  
+                  
                 
                 <a>
+                <div class="title"> ${data.response.content[i].title}</div>
                 </div>`;
+                //<span class="title"> ${data.response.content[i].title}</span>
               } else {
                 div.innerHTML += `<div class="item" > ${data.response.content[i].title}</div>`;
               }
@@ -283,6 +302,7 @@ window.onload = (event) => {
           .catch((error) => {
             //console.log(error);
           });
+        elemContent.appendChild(catName);
         elemContent.appendChild(div);
       }
     });

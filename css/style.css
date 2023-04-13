@@ -44,10 +44,12 @@
 .flex_container {
   display: -webkit-flex;
   /* width: 30em; */
-  /* overflow-x: auto;
-  white-space: nowrap; */
+  overflow-x: auto;
+
+  /* white-space: nowrap; */
   padding: 10px;
   height: 500px;
+ /* width: 5000px;*/
 }
 
 .content {
