@@ -40,3 +40,24 @@
 .weather {
   float: right;
 }
+
+.flex_container {
+  display: -webkit-flex;
+  /* width: 30em; */
+  /* overflow-x: auto;
+  white-space: nowrap; */
+  padding: 10px;
+  height: 500px;
+}
+
+.content {
+  /* border: 0px; */
+  overflow: auto;
+  /* border: 5px dashed orange; */
+  height: 1080px;
+}
+
+.focused {
+  padding: 5px;
+  border: 5px solid #fff;
+}

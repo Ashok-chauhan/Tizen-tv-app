@@ -1,3 +1,172 @@
+/**
+ * Handle input from remote
+ */
+var catid;
+function registerKeyHandler() {
+  document.addEventListener("keydown", function (e) {
+    switch (e.keyCode) {
+      case 37: //LEFT arrow
+        console.log("#### >> LEFT Arrow");
+        keys.blur();
+
+        let leftkeyName = keys.key.id;
+        console.log(">>>>" + leftkeyName);
+
+        let leftKey = document.getElementById(leftkeyName);
+        let lcount = leftKey.children;
+        let lcounter = 0;
+        for (let i = 0; i < lcount.length; i++) {
+          if (leftKey.children[i].className === "item focused") {
+            lcounter = i;
+            break;
+          }
+        }
+        for (let i = 0; i < lcount.length; i++) {
+          if (i === lcounter) {
+            leftKey.children[i].classList.remove("focused");
+            lcounter--;
+            leftKey.children[lcounter].classList.add("focused");
+            break;
+          }
+        }
+
+        break;
+
+      case 38: //UP arrow
+        console.log("#### >> Up Arrow");
+        //clearing focused item
+        if (catid !== undefined) {
+          let did = document.getElementById(catid);
+          let ct = did.children;
+
+          for (let i = 0; i < ct.length; i++) {
+            if (did.children[i].className === "item focused") {
+              did.children[i].classList.remove("focused");
+              break;
+            }
+          }
+        }
+
+        keys.blur();
+        if (keys.key === keys.parent.firstElementChild) {
+          keys.key = keys.parent.lastElementChild;
+        } else {
+          keys.key = keys.key.previousElementSibling;
+        }
+        console.log("key >>-Up " + JSON.stringify(keys));
+        keys.focus();
+        break;
+
+      case 39: //RIGHT arrow
+        console.log("#### >> RIGHT Arrow");
+        keys.blur();
+
+        let arrowkeyName = keys.key.id;
+        console.log(">>>>" + arrowkeyName);
+        catid = arrowkeyName;
+        let arrowKey = document.getElementById(arrowkeyName);
+        let count = arrowKey.children;
+        let counter = 0;
+        for (let i = 0; i < count.length; i++) {
+          if (arrowKey.children[i].className === "item focused") {
+            counter = i;
+            break;
+          }
+        }
+        for (let i = 0; i < count.length; i++) {
+          if (i === counter) {
+            arrowKey.children[i].classList.remove("focused");
+            counter++;
+            arrowKey.children[counter].classList.add("focused");
+            break;
+          }
+        }
+
+        break;
+
+      case 40: //DOWN arrow
+        console.log("####>> Down arrow");
+        //Clearing focused item
+
+        if (catid !== undefined) {
+          let did = document.getElementById(catid);
+          let ct = did.children;
+
+          for (let i = 0; i < ct.length; i++) {
+            if (did.children[i].className === "item focused") {
+              did.children[i].classList.remove("focused");
+              break;
+            }
+          }
+        }
+
+        keys.blur();
+        if (keys.key === keys.parent.lastElementChild) {
+          keys.key = keys.parent.firstElementChild;
+        } else {
+          keys.key = keys.key.nextElementSibling;
+        }
+        console.log("key >>: " + JSON.stringify(keys));
+        keys.focus();
+        break;
+      case 13: //OK button
+        console.log("ok button");
+        let video_url;
+        if (catid !== undefined) {
+          let did = document.getElementById(catid);
+          let ct = did.children;
+
+          for (let i = 0; i < ct.length; i++) {
+            if (did.children[i].className === "item focused") {
+              video_url = did.children[i].id;
+              break;
+            }
+          }
+        }
+        window.location.href = "file:///video.html?videoUrl=" + video_url;
+
+        break;
+      case 10009: //RETURN button
+        tizen.application.getCurrentApplication().hide();
+        break;
+      default:
+        console.log("Key code : " + e.keyCode);
+        break;
+    }
+  });
+}
+
+/**
+ *
+ */
+
+var keys = {
+  parent: null,
+  key: null,
+  registeredKeys: [],
+  focus: function () {
+    this.key.classList.add("focused");
+  },
+  blur: function () {
+    this.key.classList.remove("focused");
+  },
+};
+
+var arrkeys = {
+  parent: null,
+  key: null,
+  registeredKeys: [],
+  focus: function () {
+    this.key.classList.add("focused");
+  },
+  blur: function () {
+    this.key.classList.remove("focused");
+  },
+};
+/**
+ * Start the application once loading is finished
+ */
+
 window.onload = (event) => {
   console.log("page is fully loaded");
 
@@ -50,27 +219,30 @@ window.onload = (event) => {
               "?zip_code=" +
               data.response.config.zipcode,
           };
-          
+
           for (let i = 0; i < data.response.categories.length; i++) {
-        	  if(data.response.categories[i].uri !== undefined && data.response.categories[i].uri !== ''){ //filter parent categories
-            const cats = {
-              id: data.response.categories[i].id,
-              name: data.response.categories[i].label,
-             
-            };
-            catId.push(cats);
-        	  }
+            if (
+              data.response.categories[i].uri !== undefined &&
+              data.response.categories[i].uri !== ""
+            ) {
+              //filter parent categories
+              const cats = {
+                id: data.response.categories[i].id,
+                name: data.response.categories[i].label,
+              };
+              catId.push(cats);
+            }
           }
           catId.push(weather);
           resolve(catId);
         })
         .catch((err) => {
-          console.log(err);
+          //console.log(err);
         });
     });
   }
 
-  const elem = document.querySelector("#cats");
+  //const elem = document.querySelector("#cats");
 
   async function Data() {
     const categoryid = await categoryId();
@@ -79,51 +251,55 @@ window.onload = (event) => {
     const weatherElement = document.getElementById("weather");
     weatherElement.innerHTML = `<div>${weatherData.location} </div><div> ${weatherData.temperatuer} \u00B0
     <span> <img src="${weatherData.icon}"/></span>`;
+    var elemContent = document.getElementById("pagelist");
 
-    var elem = document.getElementById("content");
+    //elem.scrollTop = elem.scrollHeight;
 
-    var tbl = document.createElement("table");
-    tbl.style.width = "100%";
-    tbl.setAttribute("border", "0");
-    var tbdy = document.createElement("tbody");
-    //console.log(categoryid[categoryid.length - 1].weather_url_whiz);
     categoryid.forEach((cid) => {
       if (cid.id !== undefined) {
-        var tr = document.createElement("tr");
-        let trCatname = document.createElement("tr");
-        let tdCatname = document.createElement("td");
-        tdCatname.colSpan = 3;
-        tdCatname.className = "h2";
-        tdCatname.innerHTML = ` ${cid.name} `;
-        trCatname.appendChild(tdCatname);
-        tbdy.appendChild(trCatname);
+        // fdiv.className = "flex_container";
+        let div = document.createElement("div");
+        div.className = "flex_container";
+        div.setAttribute("id", cid.id);
+
         getData("https://prodman.whizti.com/api/category/" + cid.id)
           .then(function (data) {
             for (let i = 0; i <= data.response.content.length; i++) {
               if (data.response.content[i].icon_uri) {
-                //console.log(data.response.content[i].title);
-                var td = document.createElement("td");
-                td.className = "item";
-                td.innerHTML += `<a href="video.html?videoUrl=${data.response.content[i].uri}"><div>
-		        	<img src="${data.response.content[i].icon_uri}" width="500" height="200" />
-              <span class="title"> ${data.response.content[i].title}</span>
-		        	</div><a>`;
+                div.innerHTML += `
+                <div class="item" id="${data.response.content[i].uri}" >
+                <a href="video.html?videoUrl=${data.response.content[i].uri}">
+                
+                  <img src="${data.response.content[i].icon_uri}" width="500" height="200" />
+                  <span class="title"> ${data.response.content[i].title}</span>
+                
+                <a>
+                </div>`;
               } else {
-                td.innerHTML += `<div class="item" > ${data.response.content[i].title}</div>`;
+                div.innerHTML += `<div class="item" > ${data.response.content[i].title}</div>`;
               }
-              tr.appendChild(td);
             }
           })
           .catch((error) => {
             //console.log(error);
           });
-
-        tbdy.appendChild(tr);
+        elemContent.appendChild(div);
       }
     });
-    tbl.appendChild(tbdy);
-    elem.appendChild(tbl);
   }
 
   Data();
+
+  registerKeyHandler();
+
+  keys.parent = document.getElementById("pagelist");
+
+  keys.key = keys.parent.firstElementChild;
+
+  if (keys.key !== undefined) {
+    keys.focus();
+  } else {
+    keys.key = keys.parent;
+    keys.focus();
+  }
 };
