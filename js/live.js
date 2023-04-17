@@ -98,86 +98,77 @@ webapis.avplay.prepareAsync(successCallback, errorCallback);
 //webapis.avplay.play();
 //webapis.avplay.stop();
 
-/*
-				var value = tizen.tvinputdevice.getSupportedKeys();
-		console.log('######## '+ JSON.stringify(value)); 
-var init = function(){
-	 console.log('init() called');
-	// tizen.tvinputdevice.registerKeyBatch(['VolumeUp', 'VolumeDown','MediaPlay','MediaPlayPause','ArrowLeft','ArrowRight']);
-	 document.body.addEventListener('keydown', function(event){
-		 
-		 
-		 tizen.tvinputdevice.registerKey("MediaPlayPause");
-			tizen.tvinputdevice.registerKey("MediaPlay");
-			tizen.tvinputdevice.registerKey("MediaStop");
-			tizen.tvinputdevice.registerKey("MediaPause");
-			tizen.tvinputdevice.registerKey("MediaRewind");
-			tizen.tvinputdevice.registerKey("MediaFastForward");
-			
-			
-		 console.log('##################' + event.keyCode);
-		  switch (event.keyCode) {
-		    case 10252: //MediaPlayPause
-		      console.log('Play/ Paused');
-		      if(webapis.avplay.getState() === 'PLAYING'){
-		    	  webapis.avplay.pause();
-		      }else if(webapis.avplay.getState() === 'PAUSED') {
-		    	  webapis.avplay.play();
-		      }
-		    break;
-		    
-		    
-		    case 10009: //back
-			      console.log('Stoped');
-			      webapis.avplay.stop();
-			    break;
-			    
-		    case 415: //MediaPlay
-		    	console.log('plyed!');
-		    	webapis.avplay.play();
-		    break;
-		    case 13: //Enter
-		    	console.log('played!');
-		    	 webapis.avplay.play();
-		    break;
-		    
-		    case 19: //MediaPause
-		    	console.log('paused!');
-		    	webapis.avplay.pause();
-		    break;
+var value = tizen.tvinputdevice.getSupportedKeys();
 
-		    case 403: //ColorF0Red
-		      console.log('red color');
-		    break;
-		    case 37: //left arrow
-			      console.log('Left arrow pressed');
-			    break;
-		    case 38: //up arrow
-			      console.log('Up arrow pressed!');
-			    break;
-		    case 39: //right arrow
-			      console.log('right arrow pressed!');
-			    break;
-		    case 40: //down arrow
-			     console.log('Down arrow pressed!');
-			    break;
-		    case 447: //volum up
-			     console.log('Volum up');
-			    break;
-		    case 448: //Volum down
-			      console.log('Volume down');
-			    break;
-		    case 449: //volum mute
-			     console.log('volume muted!');
-			    break;
-				  
-		  }
-		 
-		 
-	 });
-}
-		
+var init = function () {
+  console.log("init() called");
+  // tizen.tvinputdevice.registerKeyBatch(['VolumeUp', 'VolumeDown','MediaPlay','MediaPlayPause','ArrowLeft','ArrowRight']);
+  document.body.addEventListener("keydown", function (event) {
+    tizen.tvinputdevice.registerKey("MediaPlayPause");
+    tizen.tvinputdevice.registerKey("MediaPlay");
+    tizen.tvinputdevice.registerKey("MediaStop");
+    tizen.tvinputdevice.registerKey("MediaPause");
+    tizen.tvinputdevice.registerKey("MediaRewind");
+    tizen.tvinputdevice.registerKey("MediaFastForward");
 
-*/
+    console.log("##################" + event.keyCode);
+    switch (event.keyCode) {
+      case 10252: //MediaPlayPause
+        console.log("Play/ Paused");
+        if (webapis.avplay.getState() === "PLAYING") {
+          webapis.avplay.pause();
+        } else if (webapis.avplay.getState() === "PAUSED") {
+          webapis.avplay.play();
+        }
+        break;
 
-//window.onload = init;
+      case 10009: //back
+        console.log("Stoped");
+        webapis.avplay.stop();
+        //tizen.application.getCurrentApplication().hide();
+        window.history.back();
+        break;
+
+      case 415: //MediaPlay
+        console.log("plyed!");
+        webapis.avplay.play();
+        break;
+      case 13: //Enter
+        console.log("played!");
+        webapis.avplay.play();
+        break;
+
+      case 19: //MediaPause
+        console.log("paused!");
+        webapis.avplay.pause();
+        break;
+
+      case 403: //ColorF0Red
+        console.log("red color");
+        break;
+      case 37: //left arrow
+        console.log("Left arrow pressed");
+        break;
+      case 38: //up arrow
+        console.log("Up arrow pressed!");
+        break;
+      case 39: //right arrow
+        console.log("right arrow pressed!");
+        break;
+      case 40: //down arrow
+        console.log("Down arrow pressed!");
+        break;
+      case 447: //volum up
+        console.log("Volum up");
+        break;
+      case 448: //Volum down
+        console.log("Volume down");
+        break;
+      case 449: //volum mute
+        console.log("volume muted!");
+        break;
+    }
+  });
+};
+
+window.onload = init;

@@ -21,10 +21,14 @@ function registerKeyHandler() {
             break;
           }
         }
+
         for (let i = 0; i < lcount.length; i++) {
           if (i === lcounter) {
+            console.log("lcounter " + lcounter);
+            if (lcounter <= 0) break;
             leftKey.children[i].classList.remove("focused");
             lcounter--;
+
             leftKey.children[lcounter].classList.add("focused");
 
             ////////////////////////////////////////////////////////////////
@@ -39,28 +43,43 @@ function registerKeyHandler() {
 
       case 38: //UP arrow
         console.log("#### >> Up Arrow");
-        //clearing focused item
-        if (catid !== undefined) {
-          let did = document.getElementById(catid);
-          let ct = did.children;
 
-          for (let i = 0; i < ct.length; i++) {
-            if (did.children[i].className === "item focused") {
-              did.children[i].classList.remove("focused");
-              break;
+        //clearing focused item
+        if (keys.key.previousElementSibling.childElementCount) {
+          if (catid !== undefined) {
+            let did = document.getElementById(catid);
+            let ct = did.children;
+
+            for (let i = 0; i < ct.length; i++) {
+              if (did.children[i].className === "item focused") {
+                did.children[i].classList.remove("focused");
+                break;
+              }
             }
           }
-        }
 
-        keys.blur();
-        if (keys.key === keys.parent.firstElementChild) {
-          keys.key = keys.parent.lastElementChild;
-        } else {
-          keys.key = keys.key.previousElementSibling;
+          //keys.blur();
+
+          if (keys.key === keys.parent.firstElementChild) {
+            keys.key = keys.parent.lastElementChild;
+          } else {
+            keys.key = keys.key.previousElementSibling;
+          }
+
+          if (keys.key.nextElementSibling.childElementCount !== 0) {
+            keys.key.nextElementSibling.firstElementChild.classList.remove(
+              "focused"
+            );
+          }
+
+          catid = keys.key.id; // play first video when ok/ enter
+
+          if (keys.key.childElementCount !== 0) {
+            keys.key.scrollIntoView(true);
+            //keys.focus();
+            keys.key.firstElementChild.classList.add("focused");
+          }
         }
-        console.log("key >>-Up " + JSON.stringify(keys));
-        keys.key.scrollIntoView(true);
-        keys.focus();
         break;
 
       case 39: //RIGHT arrow
@@ -81,7 +100,8 @@ function registerKeyHandler() {
             break;
           }
         }
-        for (let i = 0; i < count.length; i++) {
+
+        for (let i = 0; i < count.length - 1; i++) {
           if (i === counter) {
             arrowKey.children[i].classList.remove("focused");
             counter++;
@@ -100,31 +120,42 @@ function registerKeyHandler() {
         console.log("####>> Down arrow");
         //Clearing focused item
 
-        if (catid !== undefined) {
-          let did = document.getElementById(catid);
-          let ct = did.children;
+        if (keys.key.nextElementSibling) {
+          if (catid !== undefined) {
+            let did = document.getElementById(catid);
+            let ct = did.children;
 
-          for (let i = 0; i < ct.length; i++) {
-            if (did.children[i].className === "item focused") {
-              did.children[i].classList.remove("focused");
-              break;
+            for (let i = 0; i < ct.length; i++) {
+              if (did.children[i].className === "item focused") {
+                did.children[i].classList.remove("focused");
+                break;
+              }
             }
           }
-        }
 
-        keys.blur();
-        if (keys.key === keys.parent.lastElementChild) {
-          keys.key = keys.parent.firstElementChild;
-        } else {
-          keys.key = keys.key.nextElementSibling;
+          if (keys.key === keys.parent.lastElementChild) {
+            keys.key = keys.parent.firstElementChild;
+          } else {
+            keys.key = keys.key.nextElementSibling;
+          }
+          if (keys.key.previousElementSibling.childElementCount !== 0) {
+            keys.key.previousElementSibling.firstElementChild.classList.remove(
+              "focused"
+            );
+          }
+          catid = keys.key.id; // play first video when ok/ enter
+
+          if (keys.key.childElementCount !== 0) {
+            keys.key.scrollIntoView(true);
+            //keys.focus();
+            keys.key.firstElementChild.classList.add("focused");
+          }
         }
-        keys.key.scrollIntoView(true);
-        console.log("key >>: " + JSON.stringify(keys));
-        keys.focus();
         break;
       case 13: //OK button
         console.log("ok button");
         let video_url;
+
         if (catid !== undefined) {
           let did = document.getElementById(catid);
           let ct = did.children;
@@ -136,11 +167,17 @@ function registerKeyHandler() {
             }
           }
         }
+
+        let ext = video_url.split(".").pop();
+        if (ext !== ".m3u8") window.location.href = "file:///index.html";
         window.location.href = "file:///video.html?videoUrl=" + video_url;
 
         break;
       case 10009: //RETURN button
+        webapis.avplay.stop();
+
         tizen.application.getCurrentApplication().hide();
+        window.history.back();
         break;
       default:
         console.log("Key code : " + e.keyCode);
@@ -165,17 +202,17 @@ var keys = {
   },
 };
 
-var arrkeys = {
-  parent: null,
-  key: null,
-  registeredKeys: [],
-  focus: function () {
-    this.key.classList.add("focused");
-  },
-  blur: function () {
-    this.key.classList.remove("focused");
-  },
-};
+// var arrkeys = {
+//   parent: null,
+//   key: null,
+//   registeredKeys: [],
+//   focus: function () {
+//     this.key.classList.add("focused");
+//   },
+//   blur: function () {
+//     this.key.classList.remove("focused");
+//   },
+// };
 /**
  * Start the application once loading is finished
  */
@@ -283,7 +320,7 @@ window.onload = (event) => {
             for (let i = 0; i <= data.response.content.length; i++) {
               if (data.response.content[i].icon_uri) {
                 div.innerHTML += `
-                <div class="item" id="${data.response.content[i].uri}" >
+                <div class="item" name="${cid.id}" id="${data.response.content[i].uri}" >
                 <a href="video.html?videoUrl=${data.response.content[i].uri}">
                 
                   <img src="${data.response.content[i].icon_uri}" width="500" height="200" />
@@ -302,7 +339,7 @@ window.onload = (event) => {
           .catch((error) => {
             //console.log(error);
           });
-        elemContent.appendChild(catName);
+        //elemContent.appendChild(catName);
         elemContent.appendChild(div);
       }
     });
